@@ -25,7 +25,7 @@ app.use(function (req, res, next) {
 const httpServer = require("http").createServer(app);
 const httpsServer = require("https").createServer(options, app);
 const { ExpressPeerServer } = require("peer");
-const peerServer = ExpressPeerServer(httpsServer, {
+const peerServer = ExpressPeerServer(httpServer, {
   debug: true,
 });
 const { v4: uuidV4 } = require("uuid");
