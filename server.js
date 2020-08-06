@@ -13,15 +13,23 @@ const options = {
 };
 var app = express();
 
-app.use(function (req, res, next) {
-  if (req.headers["x-forwarded-proto"] === "http") {
-    return res.redirect(["https://", req.get("Host"), req.url].join(""));
-  }
-  next();
-});
+// app.use(function (req, res, next) {
+//   if (req.headers["x-forwarded-proto"] === "http") {
+//     return res.redirect(["https://", req.get("Host"), req.url].join(""));
+//   }
+//   next();
+// });
 
 // start server (listen on port 443 - SSL)
 // const sslSrv = https.createServer({ key: pkey, cert: pcert, passphrase: "123456789" }, app).listen(443);
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 const httpServer = require("http").createServer(app);
 const httpsServer = require("https").createServer(options, app);
 const { ExpressPeerServer } = require("peer");
