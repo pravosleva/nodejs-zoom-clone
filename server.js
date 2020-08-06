@@ -1,17 +1,17 @@
 const express = require("express");
 // const app = express();
-// const cors = require("cors");
-// app.use(cors());
 // const server = require("http").Server(app);
 // const io = require("socket.io")(server);
 // SSL
 const fs = require("fs");
-const options = {
+const sslOptions = {
   key: fs.readFileSync("./ssl/key.pem"),
   cert: fs.readFileSync("./ssl/cert.pem"),
   passphrase: "123456789",
 };
 var app = express();
+const cors = require("cors");
+app.use(cors());
 
 // app.use(function (req, res, next) {
 //   if (req.headers["x-forwarded-proto"] === "http") {
@@ -31,22 +31,22 @@ app.use(function (req, res, next) {
   next();
 });
 const httpServer = require("http").createServer(app);
-const httpsServer = require("https").createServer(options, app);
+const httpsServer = require("https").createServer(sslOptions, app);
 const { ExpressPeerServer } = require("peer");
 const peerServer = ExpressPeerServer(httpServer, {
   debug: true,
 });
 const { v4: uuidV4 } = require("uuid");
-const ioServer = require("socket.io");
-const io = new ioServer();
-io.attach(httpServer);
-io.attach(httpsServer);
 const PORT_HTTP = 7165;
 const PORT_HTTPS = 7166;
 httpServer.listen(PORT_HTTP);
 httpsServer.listen(PORT_HTTPS);
 console.log("The HTTP server is up and running on", PORT_HTTP);
 console.log("The HTTPS server is up and running on", PORT_HTTPS);
+const ioServer = require("socket.io");
+const io = new ioServer();
+io.attach(httpServer);
+io.attach(httpsServer);
 
 app.use("/peerjs", peerServer);
 
