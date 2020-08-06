@@ -4,13 +4,6 @@ const express = require("express");
 // app.use(cors());
 // const server = require("http").Server(app);
 // const io = require("socket.io")(server);
-var app = express.createServer(options);
-const { ExpressPeerServer } = require("peer");
-const peerServer = ExpressPeerServer(app, {
-  debug: true,
-});
-const { v4: uuidV4 } = require("uuid");
-
 // SSL
 const fs = require("fs");
 const options = {
@@ -18,7 +11,12 @@ const options = {
   cert: fs.readFileSync("./ssl/cert.pem"),
   passphrase: "123456789",
 };
-// let wss = null;
+var app = express.createServer(options);
+const { ExpressPeerServer } = require("peer");
+const peerServer = ExpressPeerServer(app, {
+  debug: true,
+});
+const { v4: uuidV4 } = require("uuid");
 
 app.use(function (req, res, next) {
   if (req.headers["x-forwarded-proto"] === "http") {
