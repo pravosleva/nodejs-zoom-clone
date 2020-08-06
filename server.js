@@ -34,7 +34,7 @@ const io = new ioServer();
 io.attach(httpServer);
 io.attach(httpsServer);
 const PORT_HTTP = 7165;
-const PORT_HTTPS = 7165;
+const PORT_HTTPS = 7166;
 httpServer.listen(PORT_HTTP);
 httpsServer.listen(PORT_HTTPS);
 console.log("The HTTP server is up and running on", PORT_HTTP);
