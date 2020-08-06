@@ -11,12 +11,7 @@ const options = {
   cert: fs.readFileSync("./ssl/cert.pem"),
   passphrase: "123456789",
 };
-var app = express.createServer(options);
-const { ExpressPeerServer } = require("peer");
-const peerServer = ExpressPeerServer(app, {
-  debug: true,
-});
-const { v4: uuidV4 } = require("uuid");
+var app = express();
 
 app.use(function (req, res, next) {
   if (req.headers["x-forwarded-proto"] === "http") {
@@ -24,10 +19,16 @@ app.use(function (req, res, next) {
   }
   next();
 });
+
 // start server (listen on port 443 - SSL)
 // const sslSrv = https.createServer({ key: pkey, cert: pcert, passphrase: "123456789" }, app).listen(443);
-const httpServer = require("http").createServer();
-const httpsServer = require("https").createServer(options);
+const httpServer = require("http").createServer(app);
+const httpsServer = require("https").createServer(options, app);
+const { ExpressPeerServer } = require("peer");
+const peerServer = ExpressPeerServer(httpsServer, {
+  debug: true,
+});
+const { v4: uuidV4 } = require("uuid");
 const ioServer = require("socket.io");
 const io = new ioServer();
 io.attach(httpServer);
