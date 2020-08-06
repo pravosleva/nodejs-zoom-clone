@@ -34,9 +34,12 @@ const ioServer = require("socket.io");
 const io = new ioServer();
 io.attach(httpServer);
 io.attach(httpsServer);
-httpServer.listen(7165);
-httpsServer.listen(7166);
-// console.log("The HTTPS server is up and running");
+const PORT_HTTP = 7165;
+const PORT_HTTPS = 7165;
+httpServer.listen(PORT_HTTP);
+httpsServer.listen(PORT_HTTPS);
+console.log("The HTTP server is up and running on", PORT_HTTP);
+console.log("The HTTPS server is up and running on", PORT_HTTPS);
 
 app.use("/peerjs", peerServer);
 
